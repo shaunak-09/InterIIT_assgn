@@ -22,13 +22,13 @@ const SignUp = (props) => {
       name: Yup.string()
         .required("Required"),
       email: Yup.string().email("Invalid Email").required("Required"),
-      mobile: Yup.number()
-        .min(1000000000,"Enter A valid Phone Number")
-        .max(9999999999,"Enter A valid Phone Number")
-        .typeError("That doesn't look like a phone number")
-        // .positive("A phone number can't start with a minus")
-        .integer("A phone number can't include a decimal point")
-        .required("Required"),
+      // mobile: Yup.number()
+      //   .min(1000000000,"Enter A valid Phone Number")
+      //   .max(9999999999,"Enter A valid Phone Number")
+      //   .typeError("That doesn't look like a phone number")
+      //   // .positive("A phone number can't start with a minus")
+      //   .integer("A phone number can't include a decimal point")
+      //   .required("Required"),
       password: Yup.string()
         .min(8, "Password length must be greater than 8 letters")
         .required("Required"),
@@ -44,13 +44,13 @@ const SignUp = (props) => {
           username: values.name,
           email: values.email,
           password: values.password,
-          mobile: values.mobile
+          // mobile: values.mobile
       }
-      axios.post("https://chatbot-backend-mv63.onrender.com/api/signup/", {
+      axios.post("http://localhost:8000/api/signup/", {
         username: values.name,
         email: values.email,
         password: values.password,
-        mobile: values.mobile
+        // mobile: values.mobile
     })
       .then((res)=>{
          localStorage.setItem("user_info",JSON.stringify(res.data))
@@ -115,7 +115,7 @@ const SignUp = (props) => {
         ) : null}
         <br />
 
-        <div className="inputfield">
+        {/* <div className="inputfield">
         <label>Mobile Number</label>
           <input
             type="tel"
@@ -132,8 +132,8 @@ const SignUp = (props) => {
 
         {formik.touched.mobile && formik.errors.mobile ? (
           <p>{formik.errors.mobile}</p>
-        ) : null}
-        <br />
+        ) : null} */}
+        {/* <br /> */}
 
 
 

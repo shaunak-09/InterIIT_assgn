@@ -2,7 +2,7 @@ const axios=require("axios")
 const getNews=async (req,res)=>{
     const paramater=req.query
     
-    console.log(paramater);
+    // console.log(paramater);
     // console.log(topic);
     const options = {
         method: 'GET',

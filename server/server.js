@@ -12,9 +12,11 @@ app.use(bodyParser.json());
 app.use(cors({
     origin:'*'
 }))
+mongoose.connect(`${mongodb}`, 
+{ useNewUrlParser: true, useUnifiedTopology: true })
+.then(() => console.log('MongoDB connected'))
+  .catch((err) => console.log(err));
 
-// mongoose.connect('mongodb://localhost:27017/newsDB', 
-// { useNewUrlParser: true, useUnifiedTopology: true });
 
 app.use("/api",routes)
 
