@@ -20,13 +20,15 @@ import Select from '@mui/material/Select';
 function Landingpage(props) 
  {  
       const [category, setCategory] = useState('');
+      const [country, setCountry] = useState('');
+
       const [news, setNews] = useState([]);
       const [orinews, setOriNews] = useState([]);
       const [searchquery, setSearchquery] = useState("")
       const [searchquery1,setSearchquery1]=useState("")
 
      const handleSearch=()=>{
-        getnews({query:{q:searchquery}})
+        getnews();
      }
      const handleSearch1=(value)=>{
         if(value=="")
@@ -53,6 +55,9 @@ function Landingpage(props)
       const handleChange = (event) => {
         setCategory(event.target.value);
       };
+      const handleChange1 = (event) => {
+        setCountry(event.target.value);
+      };
       const logout = () => {
         props.setLogstat(0);
         localStorage.removeItem("user_info");
@@ -61,11 +66,14 @@ function Landingpage(props)
         toast.success("Logged out successfully");
       };
 
-      const getnews=({query}) => {
+      const getnews=() => {
         
         const params={
-            ...query,
+            q:searchquery,
             language:"en",
+            country:country,
+            category:category,
+
         }
         // console.log(params);
         axios.get('http://localhost:8000/api/news',{
@@ -83,13 +91,20 @@ function Landingpage(props)
       useEffect(()=>{
         if(category!="")
         {
-            getnews({query:{category:category}})
+            getnews();
         }
       },[category])
 
+      useEffect(()=>{
+        if(country!="")
+        {
+            getnews();
+        }
+      },[country])
+
    
      useEffect(()=>{
-        getnews({});
+        getnews();
      },[])
     
      
@@ -130,8 +145,10 @@ function Landingpage(props)
             LOGOUT
           </button>
           <div className="py-10 px-10 flex flex-col justify-center items-center">
-            <div className="p-2 flex justify-center items-center">
-            <TextField
+            <div className="p-2 flex flex-col justify-center items-start w-[60%]">
+                <div className="flex p-2 justify-center items-center">
+                <TextField
+                sx={{ minWidth: 200 }}
         id="input-with-icon-textfield"
         label="Search Headline"
         value={searchquery1}
@@ -147,8 +164,9 @@ function Landingpage(props)
         }}
         variant="outlined"
       />
-                <div className="mx-8 flex justify-center items-center">
+                <div className="ml-3 flex justify-center items-center">
                 <TextField
+                sx={{ minWidth: 200 }}
         id="input-with-icon-textfield"
         label="Search By Keywords"
         value={searchquery}
@@ -164,11 +182,86 @@ function Landingpage(props)
         }}
         variant="outlined"
       />
-      <Button variant="outlined" onClick={handleSearch} sx={{mx:1}} className="p-3">Search</Button>
-
+       <Button variant="outlined" onClick={handleSearch} sx={{mx:1}} className="p-3">Search</Button>
                 </div>
             
-      <Box sx={{ minWidth: 200 }}>
+      
+
+                </div>
+        <div className="flex p-2 justify-center items-center">
+        <Box sx={{ minWidth: 200 }}>
+      <FormControl fullWidth>
+        <InputLabel id="demo-simple-select-label">Country</InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={country}
+          label="Category"
+          onChange={handleChange1}
+        >
+        
+              <MenuItem value="ae">United Arab Emirates</MenuItem>
+              <MenuItem value="ar">Argentina</MenuItem>
+              <MenuItem value="at">Austria</MenuItem>
+              <MenuItem value="au">Australia</MenuItem>
+              <MenuItem value="be">Belgium</MenuItem>
+              <MenuItem value="bg">Bulgaria</MenuItem>
+              <MenuItem value="br">Brazil</MenuItem>
+              <MenuItem value="ca">Canada</MenuItem>
+              <MenuItem value="ch">Switzerland</MenuItem>
+              <MenuItem value="cn">China</MenuItem>
+              <MenuItem value="co">Colombia</MenuItem>
+              <MenuItem value="cu">Cuba</MenuItem>
+              <MenuItem value="cz">Czech Republic</MenuItem>
+              <MenuItem value="de">Germany</MenuItem>
+              <MenuItem value="ee">Estonia</MenuItem>
+              <MenuItem value="eg">Egypt</MenuItem>
+              <MenuItem value="es">Spain</MenuItem>
+              <MenuItem value="fr">France</MenuItem>
+              <MenuItem value="gb">United Kingdom</MenuItem>
+              <MenuItem value="gr">Greece</MenuItem>
+              <MenuItem value="hk">Hong Kong</MenuItem>
+              <MenuItem value="hu">Hungary</MenuItem>
+              <MenuItem value="id">Indonesia</MenuItem>
+              <MenuItem value="ie">Ireland</MenuItem>
+              <MenuItem value="il">Israel</MenuItem>
+              <MenuItem value="in">India</MenuItem>
+              <MenuItem value="it">Italy</MenuItem>
+              <MenuItem value="jp">Japan</MenuItem>
+              <MenuItem value="kr">South Korea</MenuItem>
+              <MenuItem value="lt">Lithuania</MenuItem>
+              <MenuItem value="lv">Latvia</MenuItem>
+              <MenuItem value="ma">Morocco</MenuItem>
+              <MenuItem value="mx">Mexico</MenuItem>
+              <MenuItem value="my">Malaysia</MenuItem>
+              <MenuItem value="ng">Nigeria</MenuItem>
+              <MenuItem value="nl">Netherlands</MenuItem>
+              <MenuItem value="no">Norway</MenuItem>
+              <MenuItem value="nz">New Zealand</MenuItem>
+              <MenuItem value="ph">Philippines</MenuItem>
+              <MenuItem value="pl">Poland</MenuItem>
+              <MenuItem value="pt">Portugal</MenuItem>
+              <MenuItem value="ro">Romania</MenuItem>
+              <MenuItem value="rs">Serbia</MenuItem>
+              <MenuItem value="ru">Russia</MenuItem>
+              <MenuItem value="sa">Saudi Arabia</MenuItem>
+              <MenuItem value="se">Sweden</MenuItem>
+              <MenuItem value="sg">Singapore</MenuItem>
+              <MenuItem value="sk">Slovakia</MenuItem>
+              <MenuItem value="th">Thailand</MenuItem>
+              <MenuItem value="tr">Turkey</MenuItem>
+              <MenuItem value="tw">Taiwan</MenuItem>
+              <MenuItem value="ua">Ukraine</MenuItem>
+              <MenuItem value="us">United States</MenuItem>
+              <MenuItem value="ve">Venezuela</MenuItem>
+              <MenuItem value="za">South Africa</MenuItem>
+
+
+        </Select>
+      </FormControl>
+     
+    </Box>
+    <Box sx={{ minWidth: 200,ml:3 }}>
       <FormControl fullWidth>
         <InputLabel id="demo-simple-select-label">Category</InputLabel>
         <Select
@@ -189,14 +282,24 @@ function Landingpage(props)
 
         </Select>
       </FormControl>
+     
     </Box>
+            </div>    
+     
             </div>
           
       <div className="p-4 flex flex-wrap my-3 ">
         {
-          news.map((item,index)=>(
+          news.length>0 ? (
+            news.map((item,index)=>(
                 <Card1 data={item} key={`${index}+${index+1}`} />
           ))
+          )
+          :
+          (
+            <h2>No Relevent News Available</h2>
+          )
+
 
         }
       </div>
